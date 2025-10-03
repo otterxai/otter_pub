@@ -6,8 +6,10 @@ on:
       - 'v*'   # vで始まるタグを対象
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # これを追加
     steps:
       - name: Checkout
         uses: actions/checkout@v4
