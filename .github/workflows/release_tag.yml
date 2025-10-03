@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'   # vで始まるタグを対象
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.35.5"
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # --- コミットメッセージを取得 ---
+      - name: Get commit message
+        id: commit
+        run: echo "msg=$(git log -1 --pretty=%B $GITHUB_SHA)" >> $GITHUB_OUTPUT
+
+      # --- ビルド ---
+      - name: Build APK
+        run: flutter build apk
+
+      # --- GitHub Releaseを作成 ---
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            build/app/outputs/flutter-apk/app-release.ap
+          body: |
+            リリースノート (コミットメッセージより自動生成)
+            ----------------------------------------
+            タグ: ${{ github.ref_name }}
+            内容: ${{ steps.commit.outputs.msg }}
