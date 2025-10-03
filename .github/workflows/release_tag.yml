@@ -34,7 +34,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            build/app/outputs/flutter-apk/app-release.ap
+            build/app/outputs/flutter-apk/app-release.apk
           body: |
             リリースノート (コミットメッセージより自動生成)
             ----------------------------------------
