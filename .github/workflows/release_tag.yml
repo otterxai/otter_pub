@@ -14,6 +14,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Cache Flutter packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -38,7 +46,7 @@ jobs:
           files: |
             build/app/outputs/flutter-apk/app-release.apk
           body: |
-            リリースノート (コミットメッセージより自動生成)
+            リリースノート
             ----------------------------------------
             タグ: ${{ github.ref_name }}
             内容: ${{ steps.commit.outputs.msg }}
